@@ -33,10 +33,10 @@ const orderSchema = mongoose.Schema(
       },
     ],
     shippingAddress: {
-      address: { type: String, required: True },
-      city: { type: String, required: True },
-      postalCode: { type: String, required: True },
-      country: { type: String, required: True },
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
     },
     paymentMethod: {
       type: String,
