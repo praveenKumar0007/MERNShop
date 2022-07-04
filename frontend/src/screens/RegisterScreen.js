@@ -32,7 +32,9 @@ const RegisterScreen = () => {
   const registerSubmitHandler = (e) => {
     e.preventDefault()
     setMessage(null)
-    if (password !== confirmPassword) {
+    if (password === '') {
+      setMessage('Password cannot be empty')
+    } else if (password !== confirmPassword) {
       setMessage('Password do not match')
     } else {
       dispatch(register(name, email, password))
