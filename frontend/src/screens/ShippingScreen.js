@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { saveShippingAddress } from '../actions/cartActions'
 import FormContainer from '../components/FormContainer'
-import Message from '../components/Message'
+import CheckoutSteps from '../components/CheckoutSteps'
 
 const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart)
-  const { shippingAddress, shippingAddressSave } = cart
+  const { shippingAddress } = cart
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const [address, setAddress] = useState(shippingAddress.address)
@@ -26,14 +28,13 @@ const ShippingScreen = () => {
         country,
       })
     )
+    navigate('/payment')
   }
 
   return (
     <FormContainer>
       <h1>Shipping Address</h1>
-      {shippingAddressSave && (
-        <Message variant='success' children='Shipping Address Saved!' />
-      )}
+      <CheckoutSteps signIn shipping />
       <Form onSubmit={shippingAddressSubmitHandler}>
         <Form.Group controlId='text' className='my-2'>
           <Form.Label>Address</Form.Label>
