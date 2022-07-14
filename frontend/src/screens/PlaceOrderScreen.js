@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { createOrder } from '../actions/orderActions'
+import { CREATE_ORDER_RESET } from '../constants/orderConstants'
 
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch()
@@ -18,9 +19,11 @@ const PlaceOrderScreen = () => {
   useEffect(() => {
     if (success) {
       navigate(`/order/${order._id}`)
+      dispatch({ type: CREATE_ORDER_RESET })
     }
+
     //eslint-disable-next-line
-  }, [success, navigate])
+  }, [success, navigate, dispatch, order])
 
   const placeOrderHandler = () => {
     dispatch(
