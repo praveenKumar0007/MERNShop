@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { listProducts } from '../actions/productActions'
+import { listProducts, deleteProduct } from '../actions/productActions'
 import { Table, Button, Row, Col } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -16,16 +16,24 @@ const ProductListScreen = () => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const productDelete = useSelector((state) => state.productDelete)
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+    deletedProductName,
+  } = productDelete
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listProducts())
     } else {
       navigate('/login')
     }
-  }, [dispatch, userInfo, navigate])
-  const deleteHandler = (id) => {
-    if (window.confirm('Are you sure')) {
-      //DELETE PRODUCTS
+  }, [dispatch, userInfo, navigate, successDelete])
+  const deleteHandler = (id, name) => {
+    if (window.confirm(`Are you sure you want to delete ${name}`)) {
+      dispatch(deleteProduct(id))
     }
   }
   const createProductHandler = (productId) => {
@@ -43,12 +51,21 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+
+      {loadingDelete ? (
+        <Loader />
+      ) : (
+        errorDelete && <Message variant='danger'>{errorDelete}</Message>
+      )}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
+          {successDelete && (
+            <Message variant='success'>{`${deletedProductName} has been Deleted!`}</Message>
+          )}
           <Table striped bordered hover responsive className='table-sm'>
             <thead>
               <tr>
@@ -76,7 +93,7 @@ const ProductListScreen = () => {
                     <Button
                       variant='danger'
                       className='btn-sm'
-                      onClick={() => deleteHandler(product._id)}
+                      onClick={() => deleteHandler(product._id, product.name)}
                     >
                       <i className='fas fa-trash'></i>
                     </Button>
